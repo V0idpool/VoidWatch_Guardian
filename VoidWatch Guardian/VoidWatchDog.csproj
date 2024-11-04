@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>voidwatch.ico</ApplicationIcon>
+    <Authors>voidpool</Authors>
+    <Company>$(Authors)</Company>
+    <Product>VoidWatch Guardian</Product>
+    <PackageIcon></PackageIcon>
+    <AssemblyName>VoidWatch Guardian</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="UserCFG.ini" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="voidwatch.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="UserCFG.ini" />
+  </ItemGroup>
+
+</Project>
