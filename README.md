@@ -1,32 +1,36 @@
 # VoidWatch Guardian
-![VoidWatchGuardian](https://img.shields.io/badge/version-1.0.0-brightgreen)
-![Release](https://img.shields.io/badge/Release-10%2F13%2F2024-blue)
-<div align="center">
-    <img src="https://raw.githubusercontent.com/V0idpool/VoidWatch_Guardian/refs/heads/main/voidwatch.webp" alt="VoidWatch Logo" width="600"/>
-</div>
-VoidWatch Guardian is a Windows-based watchdog application designed to automatically monitor and manage Discord bot executables or any other application executables. It provides real-time status updates on program status (running or stopped), attempts to restart processes if they unexpectedly terminate, and logs events and errors.
+![VoidWatchGuardian](https://img.shields.io/badge/version-1.0.1-brightgreen)
+![Release](https://img.shields.io/badge/Release-11%2F04%2F2024-blue)
 
-## ⚙️ **Version**: 1.0.0 (Public Release)  
+![VoidWatch Guardian Logo](https://raw.githubusercontent.com/V0idpool/VoidWatch_Guardian/refs/heads/main/voidwatch.webp)
+
+VoidWatch Guardian is a Windows-based watchdog application designed to automatically monitor, restart, and manage Discord bot executables or any other application executables. It provides real-time status updates on program status (running or stopped), automatically restarts programs if they unexpectedly terminate, and logs events and errors.
+
+## ⚙️ **Version**: 1.0.1 (Public Release)  
 ## 👨‍💻 **Author**: VoidBot Development Team ([@VoidPool](https://github.com/V0idpool))  
 ## 📅 **Release Date**: 11/04/2024  
 
 ## Features
 
-- **Monitor Multiple Programs**: Keep an eye on multiple executables (Discord bots, Node.js instances, etc.) at once.
+- **Monitor Multiple Programs**: Keep an eye on multiple executables (Discord bots, Node.js instances, etc.) simultaneously.
 - **Automatic Restart**: Automatically restart any monitored programs that stop unexpectedly.
-- **Configurable Monitoring Interval**: Set a custom monitoring interval for how often VoidWatch Guardian checks the status of monitored applications.
-- **Logging**: Tracks events such as application crashes, restart attempts, and general error logs.
+- **Configurable Monitoring Interval**: Set a custom monitoring interval to specify how often VoidWatch Guardian checks the status of monitored applications.
+- **Periodic Auto-Restart**: Option to periodically restart programs based on a user-defined interval.
+- **Logging**: Tracks events such as application crashes, restart attempts, and general errors.
 - **Auto Start Option**: Start monitoring automatically when VoidWatch Guardian launches.
-- **Easy Program Addition/Removal**: Add or remove executables with just a few clicks.
+- **Easy Program Addition/Removal**: Add or remove executables with just a few clicks directly in the application, no need to manually edit configuration files.
 
 ## Installation and Setup
 
-1. **Download and Extract**: Download VoidWatch Guardian here: https://github.com/V0idpool/VoidWatch_Guardian/releases/
+1. **Download Source and Extract** Download VoidWatch Guardian here: [VoidWatch Guardian Releases](https://github.com/V0idpool/VoidWatch_Guardian/releases/)
 2. **Open in Visual Studio**: Open `VoidWatch Guardian` in Visual Studio to build and run.
-3. **Configure Settings**:
+3. **Configure Settings in the App**:
     - **Executable Paths**: Use the `Add` button to add program executables (e.g., `.exe` files) that you want to monitor.
-    - **Auto Start**: To enable auto start monitoring, set `AutoStart=True` in the `UserCFG.ini` file.
-    - **Monitoring Interval**: Set a custom monitoring interval through the application settings or directly in `UserCFG.ini` under the `MonitoringInterval` setting.
+    - **Auto Start Monitoring**: Toggle in the app to start monitoring automatically on launch.
+    - **Monitoring Interval**: Set a custom monitoring interval through the application’s settings form or edit it directly in `UserCFG.ini` under the `MonitoringInterval` setting.
+    - **Auto-Restart and Interval**: Enable periodic auto-restart and specify the interval in hours through the app or by setting `EnablePeriodicRestart=True` in `UserCFG.ini` and adjusting `RestartInterval`.
+
+**Download pre-built releases here:** [VoidWatch Guardian Releases](https://github.com/V0idpool/VoidWatch_Guardian/releases/)
 
 ## Usage
 
@@ -57,6 +61,8 @@ The `UserCFG.ini` file stores essential settings and program paths. Here’s a b
 
 - **AutoStart**: `True` to enable automatic monitoring upon application launch.
 - **MonitoringInterval**: The interval in seconds for the monitoring timer.
+- **EnablePeriodicRestart**: `True` to enable periodic program restarts based on the set `RestartInterval`.
+- **RestartInterval**: The interval in hours for periodically restarting all monitored programs.
 - **Program Paths**: Each monitored program has an entry as `Program1`, `Program2`, etc.
 
 Example:
@@ -64,13 +70,9 @@ Example:
 [Settings]
 AutoStart=True
 MonitoringInterval=5
+EnablePeriodicRestart=True
+RestartInterval=24
 
 [WatchDogPrograms]
 Program1=C:\Path\To\DiscordBot.exe
 Program2=C:\Path\To\AnotherProgram.exe
-```
-
-## 💡 **Support and Donations** 
-- ❤️ Contributions and suggestions from the community are welcome! Help shape future releases of VoidWatch Guardian.
-- **Donate or Subscribe**: [Buy Me a Coffee](https://buymeacoffee.com/voidbot)  
-- **Join the VoidBot Discord Support Server**: [Join for support, coding help, and more](https://discord.gg/nsSpGJ5saD)
