@@ -19,7 +19,7 @@ VoidWatch Guardian is a Windows-based watchdog application designed to automatic
 
 ## Installation and Setup
 
-1. **Download and Extract**: Dowmload VoidWatch Guardian here: https://github.com/V0idpool/VoidWatch_Guardian/releases/
+1. **Download and Extract**: Download VoidWatch Guardian here: https://github.com/V0idpool/VoidWatch_Guardian/releases/
 2. **Open in Visual Studio**: Open `VoidWatch Guardian` in Visual Studio to build and run.
 3. **Configure Settings**:
     - **Executable Paths**: Use the `Add` button to add program executables (e.g., `.exe` files) that you want to monitor.
