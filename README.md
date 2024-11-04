@@ -66,3 +66,10 @@ MonitoringInterval=5
 [WatchDogPrograms]
 Program1=C:\Path\To\DiscordBot.exe
 Program2=C:\Path\To\AnotherProgram.exe
+```
+
+- ❤️ Contributions and suggestions from the community are welcome! Help shape future releases of VoidWatch Guardian.
+
+## 💡 **Support and Donations**  
+- **Donate or Subscribe**: [Buy Me a Coffee](https://buymeacoffee.com/voidbot)  
+- **Join the VoidBot Discord Support Server**: [Join for support, coding help, and more](https://discord.gg/nsSpGJ5saD)
