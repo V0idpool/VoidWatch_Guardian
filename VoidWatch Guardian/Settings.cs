@@ -31,6 +31,16 @@
                 string autoStartMonitoringValue = chkAutoStartMonitoring.Checked ? "True" : "False";
                 INI2.WriteValue("Settings", "AutoStart", autoStartMonitoringValue, INI2.GetPath());
 
+                int restartIntervalValue = (int)restartInterval.Value;
+
+                // Save the interval to the INI file
+                INI2.WriteValue("Settings", "RestartInterval", restartIntervalValue.ToString(), INI2.GetPath());
+
+                // Save the Auto Start Monitoring setting to the INI file
+                string restartMonitoringValue = chkAutoRestart.Checked ? "True" : "False";
+                INI2.WriteValue("Settings", "EnablePeriodicRestart", restartMonitoringValue, INI2.GetPath());
+                this.Close();
+
             }
             else
             {
@@ -56,8 +66,22 @@
             {
                 MessageBox.Show("Invalid Monitoring Interval in INI file, check for white spaces, or incorrect settings.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            // Read the interval value as a string from the INI file
+            string restartIntervalString = INI2.ReadValue("Settings", "RestartInterval");
+
+            // Try to parse the string to an integer
+            if (int.TryParse(restartIntervalString, out int restartIntervalValue))
+            {
+                restartInterval.Value = restartIntervalValue;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Restart Interval in INI file, check for white spaces, or incorrect settings.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             string autoStartMonitoringValue = INI2.ReadValue("Settings", "AutoStart", "False");
             chkAutoStartMonitoring.Checked = autoStartMonitoringValue.Equals("True", StringComparison.OrdinalIgnoreCase);
+            string restartValue = INI2.ReadValue("Settings", "EnablePeriodicRestart", "False");
+            chkAutoRestart.Checked = restartValue.Equals("True", StringComparison.OrdinalIgnoreCase);
         }
 
     }
