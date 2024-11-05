@@ -12,7 +12,7 @@ namespace VoidWatchDog
         private readonly string iniPath;
         private bool _enablePeriodicRestart;
         private double _restartInterval;
-
+        private bool _isRestarting = false;
         public Form1()
         {
             InitializeComponent();
@@ -116,50 +116,56 @@ namespace VoidWatchDog
             }
         }
 
-        private void MonitorProcesses(object sender, ElapsedEventArgs e)
+         private void MonitorProcesses(object sender, ElapsedEventArgs e)
+ {
+    if (_isRestarting) return; // Skip monitoring while restarting
+
+    Invoke(new Action(() => UpdateStatusDisplay("Running...", Color.Green)));
+
+    foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
+    {
+        string programName = row.Cells["ProgramName"].Value?.ToString();
+        string exePath = _exePaths.FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == programName);
+
+        if (!string.IsNullOrEmpty(exePath))
         {
-            Invoke(new Action(() => UpdateStatusDisplay("Running...", Color.Green)));
+            Process[] processes = Process.GetProcessesByName(programName);
+            string status = processes.Length > 0 ? "Running" : "Stopped";
 
-            foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
+            if (processes.Length == 0)
             {
-                string programName = row.Cells["ProgramName"].Value?.ToString();
-                string exePath = _exePaths.FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == programName);
-
-                if (!string.IsNullOrEmpty(exePath))
-                {
-                    Process[] processes = Process.GetProcessesByName(programName);
-                    string status = processes.Length > 0 ? "Running" : "Stopped";
-
-                    if (processes.Length == 0)
-                    {
-                        ExceptionHandler.LogMessage($"{programName} stopped unexpectedly. Attempting to restart.");
-                        Process.Start(exePath);
-                        status = "Restarted";
-                        ExceptionHandler.LogMessage($"{programName} restarted.");
-                    }
-
-                    Invoke(new Action(() => row.Cells["Status"].Value = status));
-                }
-            }
-        }
-
-        private void RestartProcesses(object sender, ElapsedEventArgs e)
-        {
-            foreach (var exePath in _exePaths)
-            {
-                string programName = Path.GetFileNameWithoutExtension(exePath);
-
-                // Kill any running instances of the program
-                var processes = Process.GetProcessesByName(programName);
-                foreach (var process in processes)
-                {
-                    process.Kill();
-                    process.WaitForExit();
-                }
+                ExceptionHandler.LogMessage($"{programName} stopped unexpectedly. Attempting to restart.");
                 Process.Start(exePath);
-                ExceptionHandler.LogMessage($"{programName} restarted by periodic restart timer.");
+                status = "Restarted";
+                ExceptionHandler.LogMessage($"{programName} restarted.");
             }
+
+            Invoke(new Action(() => row.Cells["Status"].Value = status));
         }
+    }
+ }
+
+private void RestartProcesses(object sender, ElapsedEventArgs e)
+{
+    _isRestarting = true; // Indicate that restart is in progress
+
+    foreach (var exePath in _exePaths)
+    {
+        string programName = Path.GetFileNameWithoutExtension(exePath);
+
+        // Kill any running instances of the program
+        var processes = Process.GetProcessesByName(programName);
+        foreach (var process in processes)
+        {
+            process.Kill();
+            process.WaitForExit();
+        }
+        Process.Start(exePath);
+        ExceptionHandler.LogMessage($"{programName} restarted by periodic restart timer.");
+    }
+
+    _isRestarting = false; // Restart is complete, re-enable monitoring
+}
 
 
         private void UpdateStatusDisplay(string message, Color color)
