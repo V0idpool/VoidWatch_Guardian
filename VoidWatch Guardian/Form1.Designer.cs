@@ -29,53 +29,37 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            startMonitoring = new Button();
-            stopMonitoring = new Button();
             menuStrip1 = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             aboutToolStripMenuItem = new ToolStripMenuItem();
             editToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
-            groupBox1 = new GroupBox();
-            currentStatus = new Label();
+            nsGroupBox1 = new Voidbot_Discord_Bot_GUI.NSGroupBox();
+            nsGroupBox4 = new Voidbot_Discord_Bot_GUI.NSGroupBox();
+            removeFromList = new Voidbot_Discord_Bot_GUI.NSButton();
+            addToList = new Voidbot_Discord_Bot_GUI.NSButton();
+            nsGroupBox3 = new Voidbot_Discord_Bot_GUI.NSGroupBox();
+            startMonitoring = new Voidbot_Discord_Bot_GUI.NSButton();
+            stopMonitoring = new Voidbot_Discord_Bot_GUI.NSButton();
+            nsGroupBox2 = new Voidbot_Discord_Bot_GUI.NSGroupBox();
             statusDisplay = new Label();
+            currentStatus = new Label();
+            nsLabel1 = new Voidbot_Discord_Bot_GUI.NSLabel();
             lstWatchedPrograms = new DataGridView();
-            removeFromList = new Button();
-            addToList = new Button();
             menuStrip1.SuspendLayout();
-            groupBox1.SuspendLayout();
+            nsGroupBox1.SuspendLayout();
+            nsGroupBox4.SuspendLayout();
+            nsGroupBox3.SuspendLayout();
+            nsGroupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)lstWatchedPrograms).BeginInit();
             SuspendLayout();
-            // 
-            // startMonitoring
-            // 
-            startMonitoring.ForeColor = Color.Black;
-            startMonitoring.Location = new Point(540, 415);
-            startMonitoring.Name = "startMonitoring";
-            startMonitoring.Size = new Size(121, 30);
-            startMonitoring.TabIndex = 0;
-            startMonitoring.Text = "Start Monitoring";
-            startMonitoring.UseVisualStyleBackColor = true;
-            startMonitoring.Click += startMonitoring_Click;
-            // 
-            // stopMonitoring
-            // 
-            stopMonitoring.Enabled = false;
-            stopMonitoring.ForeColor = Color.Black;
-            stopMonitoring.Location = new Point(667, 415);
-            stopMonitoring.Name = "stopMonitoring";
-            stopMonitoring.Size = new Size(121, 30);
-            stopMonitoring.TabIndex = 1;
-            stopMonitoring.Text = "Stop Monitoring";
-            stopMonitoring.UseVisualStyleBackColor = true;
-            stopMonitoring.Click += stopMonitoring_Click;
             // 
             // menuStrip1
             // 
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
+            menuStrip1.Size = new Size(848, 24);
             menuStrip1.TabIndex = 2;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -107,83 +91,159 @@
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
-            // groupBox1
+            // nsGroupBox1
             // 
-            groupBox1.Controls.Add(currentStatus);
-            groupBox1.Controls.Add(statusDisplay);
-            groupBox1.Controls.Add(lstWatchedPrograms);
-            groupBox1.Controls.Add(removeFromList);
-            groupBox1.Controls.Add(addToList);
-            groupBox1.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            groupBox1.ForeColor = Color.Red;
-            groupBox1.Location = new Point(12, 27);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(776, 382);
-            groupBox1.TabIndex = 4;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Programs and Bots Being Monitored";
+            nsGroupBox1.BackColor = Color.FromArgb(30, 30, 30);
+            nsGroupBox1.Controls.Add(nsGroupBox4);
+            nsGroupBox1.Controls.Add(nsGroupBox3);
+            nsGroupBox1.Controls.Add(nsGroupBox2);
+            nsGroupBox1.Controls.Add(nsLabel1);
+            nsGroupBox1.Controls.Add(lstWatchedPrograms);
+            nsGroupBox1.DrawSeperator = false;
+            nsGroupBox1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            nsGroupBox1.ForeColor = Color.Black;
+            nsGroupBox1.Location = new Point(12, 32);
+            nsGroupBox1.Name = "nsGroupBox1";
+            nsGroupBox1.Size = new Size(824, 364);
+            nsGroupBox1.SubTitle = "";
+            nsGroupBox1.TabIndex = 9;
+            nsGroupBox1.Tag = "";
+            nsGroupBox1.Text = "nsGroupBox1";
+            nsGroupBox1.Title = "";
             // 
-            // currentStatus
+            // nsGroupBox4
             // 
-            currentStatus.AutoSize = true;
-            currentStatus.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            currentStatus.Location = new Point(180, 21);
-            currentStatus.Name = "currentStatus";
-            currentStatus.Size = new Size(60, 17);
-            currentStatus.TabIndex = 8;
-            currentStatus.Text = "Waiting...";
-            // 
-            // statusDisplay
-            // 
-            statusDisplay.AutoSize = true;
-            statusDisplay.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            statusDisplay.Location = new Point(6, 21);
-            statusDisplay.Name = "statusDisplay";
-            statusDisplay.Size = new Size(168, 17);
-            statusDisplay.TabIndex = 7;
-            statusDisplay.Text = "VoidWatch Guardian Status:";
-            // 
-            // lstWatchedPrograms
-            // 
-            lstWatchedPrograms.BackgroundColor = SystemColors.WindowFrame;
-            lstWatchedPrograms.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            lstWatchedPrograms.Location = new Point(6, 43);
-            lstWatchedPrograms.Name = "lstWatchedPrograms";
-            lstWatchedPrograms.Size = new Size(628, 323);
-            lstWatchedPrograms.TabIndex = 6;
+            nsGroupBox4.BackColor = Color.Black;
+            nsGroupBox4.Controls.Add(removeFromList);
+            nsGroupBox4.Controls.Add(addToList);
+            nsGroupBox4.DrawSeperator = false;
+            nsGroupBox4.Location = new Point(637, 29);
+            nsGroupBox4.Name = "nsGroupBox4";
+            nsGroupBox4.Size = new Size(179, 37);
+            nsGroupBox4.SubTitle = "";
+            nsGroupBox4.TabIndex = 22;
+            nsGroupBox4.Text = "nsGroupBox4";
+            nsGroupBox4.Title = "";
             // 
             // removeFromList
             // 
-            removeFromList.ForeColor = Color.Black;
-            removeFromList.Location = new Point(640, 79);
+            removeFromList.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            removeFromList.Location = new Point(92, 3);
             removeFromList.Name = "removeFromList";
-            removeFromList.Size = new Size(130, 30);
-            removeFromList.TabIndex = 5;
-            removeFromList.Text = "Remove";
-            removeFromList.UseVisualStyleBackColor = true;
+            removeFromList.Size = new Size(84, 30);
+            removeFromList.TabIndex = 18;
+            removeFromList.Text = "Remove -";
             removeFromList.Click += removeFromList_Click;
             // 
             // addToList
             // 
-            addToList.ForeColor = Color.Black;
-            addToList.Location = new Point(640, 43);
+            addToList.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            addToList.Location = new Point(3, 3);
             addToList.Name = "addToList";
-            addToList.Size = new Size(130, 30);
-            addToList.TabIndex = 4;
-            addToList.Text = "Add";
-            addToList.UseVisualStyleBackColor = true;
+            addToList.Size = new Size(86, 30);
+            addToList.TabIndex = 17;
+            addToList.Text = "Add +";
             addToList.Click += addToList_Click;
+            // 
+            // nsGroupBox3
+            // 
+            nsGroupBox3.BackColor = Color.Black;
+            nsGroupBox3.Controls.Add(startMonitoring);
+            nsGroupBox3.Controls.Add(stopMonitoring);
+            nsGroupBox3.DrawSeperator = false;
+            nsGroupBox3.Location = new Point(637, 72);
+            nsGroupBox3.Name = "nsGroupBox3";
+            nsGroupBox3.Size = new Size(179, 73);
+            nsGroupBox3.SubTitle = "";
+            nsGroupBox3.TabIndex = 20;
+            nsGroupBox3.Text = "nsGroupBox3";
+            nsGroupBox3.Title = "";
+            // 
+            // startMonitoring
+            // 
+            startMonitoring.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            startMonitoring.Location = new Point(3, 6);
+            startMonitoring.Name = "startMonitoring";
+            startMonitoring.Size = new Size(173, 30);
+            startMonitoring.TabIndex = 20;
+            startMonitoring.Text = "Start Monitoring";
+            startMonitoring.Click += startMonitoring_Click;
+            // 
+            // stopMonitoring
+            // 
+            stopMonitoring.Enabled = false;
+            stopMonitoring.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            stopMonitoring.Location = new Point(3, 38);
+            stopMonitoring.Name = "stopMonitoring";
+            stopMonitoring.Size = new Size(173, 30);
+            stopMonitoring.TabIndex = 21;
+            stopMonitoring.Text = "Stop Monitoring";
+            stopMonitoring.Click += stopMonitoring_Click;
+            // 
+            // nsGroupBox2
+            // 
+            nsGroupBox2.BackColor = Color.Black;
+            nsGroupBox2.Controls.Add(statusDisplay);
+            nsGroupBox2.Controls.Add(currentStatus);
+            nsGroupBox2.DrawSeperator = false;
+            nsGroupBox2.Location = new Point(7, 29);
+            nsGroupBox2.Name = "nsGroupBox2";
+            nsGroupBox2.Size = new Size(624, 29);
+            nsGroupBox2.SubTitle = "";
+            nsGroupBox2.TabIndex = 19;
+            nsGroupBox2.Text = "nsGroupBox2";
+            nsGroupBox2.Title = "";
+            // 
+            // statusDisplay
+            // 
+            statusDisplay.AutoSize = true;
+            statusDisplay.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            statusDisplay.ForeColor = Color.FromArgb(17, 177, 165);
+            statusDisplay.Location = new Point(4, 4);
+            statusDisplay.Name = "statusDisplay";
+            statusDisplay.Size = new Size(61, 21);
+            statusDisplay.TabIndex = 14;
+            statusDisplay.Text = "Status:";
+            // 
+            // currentStatus
+            // 
+            currentStatus.AutoSize = true;
+            currentStatus.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            currentStatus.ForeColor = Color.FromArgb(192, 0, 0);
+            currentStatus.Location = new Point(61, 4);
+            currentStatus.Name = "currentStatus";
+            currentStatus.Size = new Size(82, 21);
+            currentStatus.TabIndex = 15;
+            currentStatus.Text = "Waiting...";
+            // 
+            // nsLabel1
+            // 
+            nsLabel1.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
+            nsLabel1.Location = new Point(7, 5);
+            nsLabel1.Name = "nsLabel1";
+            nsLabel1.Size = new Size(164, 23);
+            nsLabel1.TabIndex = 16;
+            nsLabel1.Text = "nsLabel1";
+            nsLabel1.Value1 = "VoidWatch";
+            nsLabel1.Value2 = " Guardian";
+            // 
+            // lstWatchedPrograms
+            // 
+            lstWatchedPrograms.BackgroundColor = Color.Black;
+            lstWatchedPrograms.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            lstWatchedPrograms.Location = new Point(7, 64);
+            lstWatchedPrograms.Name = "lstWatchedPrograms";
+            lstWatchedPrograms.Size = new Size(624, 287);
+            lstWatchedPrograms.TabIndex = 13;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            ClientSize = new Size(800, 450);
-            Controls.Add(groupBox1);
+            ClientSize = new Size(848, 404);
+            Controls.Add(nsGroupBox1);
             Controls.Add(menuStrip1);
-            Controls.Add(startMonitoring);
-            Controls.Add(stopMonitoring);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
@@ -193,27 +253,33 @@
             Load += Form1_Load;
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            nsGroupBox1.ResumeLayout(false);
+            nsGroupBox4.ResumeLayout(false);
+            nsGroupBox3.ResumeLayout(false);
+            nsGroupBox2.ResumeLayout(false);
+            nsGroupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)lstWatchedPrograms).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private Button startMonitoring;
-        private Button stopMonitoring;
         private MenuStrip menuStrip1;
         private ToolStripMenuItem fileToolStripMenuItem;
-        private GroupBox groupBox1;
-        private Button removeFromList;
-        private Button addToList;
-        private DataGridView lstWatchedPrograms;
-        private Label currentStatus;
-        private Label statusDisplay;
         private ToolStripMenuItem aboutToolStripMenuItem;
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
+        private Voidbot_Discord_Bot_GUI.NSGroupBox nsGroupBox1;
+        private Voidbot_Discord_Bot_GUI.NSLabel nsLabel1;
+        private Label currentStatus;
+        private Label statusDisplay;
+        private DataGridView lstWatchedPrograms;
+        private Voidbot_Discord_Bot_GUI.NSButton stopMonitoring;
+        private Voidbot_Discord_Bot_GUI.NSButton addToList;
+        private Voidbot_Discord_Bot_GUI.NSButton removeFromList;
+        private Voidbot_Discord_Bot_GUI.NSGroupBox nsGroupBox2;
+        private Voidbot_Discord_Bot_GUI.NSButton startMonitoring;
+        private Voidbot_Discord_Bot_GUI.NSGroupBox nsGroupBox3;
+        private Voidbot_Discord_Bot_GUI.NSGroupBox nsGroupBox4;
     }
 }

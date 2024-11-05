@@ -12,6 +12,7 @@
     <Product>VoidWatch Guardian</Product>
     <PackageIcon></PackageIcon>
     <AssemblyName>VoidWatch Guardian</AssemblyName>
+    <Version>1.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

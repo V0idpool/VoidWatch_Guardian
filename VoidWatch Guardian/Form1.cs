@@ -88,6 +88,8 @@ namespace VoidWatchDog
             {
                 _monitorTimer.Start();
                 UpdateStatusDisplay("Running", Color.Green);
+                startMonitoring.Enabled = false;
+                stopMonitoring.Enabled = true;
             }
 
             if (_enablePeriodicRestart) _restartTimer.Start();
@@ -180,23 +182,6 @@ namespace VoidWatchDog
             }
         }
 
-        private void addToList_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Executable Files|*.exe" })
-            {
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    string filePath = openFileDialog.FileName;
-                    _exePaths.Add(filePath);
-                    string programName = Path.GetFileNameWithoutExtension(filePath);
-                    lstWatchedPrograms.Rows.Add(programName, "Stopped");
-
-                    int programIndex = _exePaths.Count;
-                    INI2.WriteValue("WatchDogPrograms", $"Program{programIndex}", filePath, INI2.GetPath());
-                }
-            }
-        }
-
         private void removeFromList_Click(object sender, EventArgs e)
         {
             if (lstWatchedPrograms.SelectedRows.Count > 0)
@@ -272,5 +257,32 @@ namespace VoidWatchDog
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e) => new About().ShowDialog();
 
         private void settingsToolStripMenuItem_Click(object sender, EventArgs e) => new Settings().ShowDialog();
+
+        private void addToList_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Executable Files|*.exe" })
+            {
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    string filePath = openFileDialog.FileName;
+                    _exePaths.Add(filePath);
+                    string programName = Path.GetFileNameWithoutExtension(filePath);
+                    lstWatchedPrograms.Rows.Add(programName, "Stopped");
+
+                    int programIndex = _exePaths.Count;
+                    INI2.WriteValue("WatchDogPrograms", $"Program{programIndex}", filePath, INI2.GetPath());
+                }
+            }
+        }
+
+        private void stopMonitoring_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void startMonitoring_Click_1(object sender, EventArgs e)
+        {
+
+        }
     }
 }

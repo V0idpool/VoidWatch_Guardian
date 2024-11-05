@@ -365,7 +365,7 @@ namespace Voidbot_Discord_Bot_GUI
 
             Font = new Font("Segoe UI", 11.25f, FontStyle.Bold);
 
-            B1 = new SolidBrush(Color.FromArgb(148, 0, 0));
+            B1 = new SolidBrush(Color.FromArgb(17, 177, 165));
         }
 
         public string _Value1 = "NET";
@@ -727,7 +727,7 @@ namespace Voidbot_Discord_Bot_GUI
             P11 = new Pen(Color.FromArgb(55, 55, 55));
             P22 = new Pen(Color.FromArgb(35, 35, 35));
             P3 = new Pen(Color.Black, 2.0f);
-            P4 = new Pen(Color.White, 2.0f);
+            P4 = new Pen(Color.FromArgb(17, 177, 165), 2.0f);
         }
 
         public bool _Checked;
@@ -767,7 +767,7 @@ namespace Voidbot_Discord_Bot_GUI
             GP2 = ThemeModule.CreateRound(1, 3, Height - 7, Height - 7, 5);
 
             PB1 = new PathGradientBrush(GP1);
-            PB1.CenterColor = Color.FromArgb(50, 50, 50);
+            PB1.CenterColor = Color.FromArgb(0, 0, 0);
             PB1.SurroundColors = new[] { Color.FromArgb(45, 45, 45) };
             PB1.FocusScales = new PointF(0.3f, 0.3f);
 
@@ -1522,7 +1522,7 @@ namespace Voidbot_Discord_Bot_GUI
             P1 = new Pen(Color.FromArgb(35, 35, 35));
             P2 = new Pen(Color.FromArgb(55, 55, 55));
 
-            B1 = new SolidBrush(Color.FromArgb(205, 150, 0));
+            B1 = new SolidBrush(Color.FromArgb(17, 177, 165));
         }
 
         public GraphicsPath GP1, GP2;
