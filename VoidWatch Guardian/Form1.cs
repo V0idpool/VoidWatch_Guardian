@@ -149,13 +149,18 @@ namespace VoidWatchDog
             {
                 string programName = Path.GetFileNameWithoutExtension(exePath);
 
-                foreach (var process in Process.GetProcessesByName(programName))
-                    process.Kill(); // Stop the process
-
+                // Kill any running instances of the program
+                var processes = Process.GetProcessesByName(programName);
+                foreach (var process in processes)
+                {
+                    process.Kill();
+                    process.WaitForExit();
+                }
                 Process.Start(exePath);
                 ExceptionHandler.LogMessage($"{programName} restarted by periodic restart timer.");
             }
         }
+
 
         private void UpdateStatusDisplay(string message, Color color)
         {
@@ -273,16 +278,6 @@ namespace VoidWatchDog
                     INI2.WriteValue("WatchDogPrograms", $"Program{programIndex}", filePath, INI2.GetPath());
                 }
             }
-        }
-
-        private void stopMonitoring_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void startMonitoring_Click_1(object sender, EventArgs e)
-        {
-
         }
     }
 }
