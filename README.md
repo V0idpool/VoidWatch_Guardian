@@ -6,9 +6,9 @@
 
 VoidWatch Guardian is a Windows-based watchdog application designed to automatically monitor, restart, and manage Discord bot executables or any other application executables. It provides real-time status updates on program status (running or stopped), automatically restarts programs if they unexpectedly terminate, and logs events and errors.
 
-## ⚙️ **Version**: 1.0.1 (Public Release)  
+## ⚙️ **Version**: 1.2 (Public Release)  
 ## 👨‍💻 **Author**: VoidBot Development Team ([@VoidPool](https://github.com/V0idpool))  
-## 📅 **Release Date**: 11/04/2024  
+## 📅 **Release Date**: 11/05/2024  
 
 ## Features
 
