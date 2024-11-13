@@ -64,17 +64,22 @@ namespace VoidWatchDog
             _monitorTimer = new System.Timers.Timer(TimeSpan.FromSeconds(monitorInterval).TotalMilliseconds);
             _monitorTimer.Elapsed += MonitorProcesses;
 
-            // Initialize restart timer if enabled
+            // Initialize restart timer
+            _restartTimer = new System.Timers.Timer();
+            _restartTimer.Elapsed += RestartProcesses;
+
+            // Set up restart timer if enabled
             string enableRestart = INI2.ReadValue("Settings", "EnablePeriodicRestart", "False");
             _enablePeriodicRestart = bool.TryParse(enableRestart, out bool enabled) && enabled;
 
             if (_enablePeriodicRestart)
             {
                 _restartInterval = LoadIntervalSetting("RestartInterval", 24); // Default to 24 hours if parsing fails
-                _restartTimer = new System.Timers.Timer(TimeSpan.FromHours(_restartInterval).TotalMilliseconds);
-                _restartTimer.Elapsed += RestartProcesses;
+                _restartTimer.Interval = TimeSpan.FromHours(_restartInterval).TotalMilliseconds;
+                _restartTimer.Start();
             }
         }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             if (!File.Exists(iniPath))
@@ -87,7 +92,7 @@ namespace VoidWatchDog
             if (bool.TryParse(autoStartMonitoring, out bool shouldAutoStart) && shouldAutoStart)
             {
                 _monitorTimer.Start();
-                UpdateStatusDisplay("Running", Color.Green);
+                UpdateStatusDisplay("Running...", Color.Green);
                 startMonitoring.Enabled = false;
                 stopMonitoring.Enabled = true;
             }
@@ -116,56 +121,84 @@ namespace VoidWatchDog
             }
         }
 
-         private void MonitorProcesses(object sender, ElapsedEventArgs e)
- {
-    if (_isRestarting) return; // Skip monitoring while restarting
-
-    Invoke(new Action(() => UpdateStatusDisplay("Running...", Color.Green)));
-
-    foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
-    {
-        string programName = row.Cells["ProgramName"].Value?.ToString();
-        string exePath = _exePaths.FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == programName);
-
-        if (!string.IsNullOrEmpty(exePath))
+        public void MonitorProcesses(object sender, ElapsedEventArgs e)
         {
-            Process[] processes = Process.GetProcessesByName(programName);
-            string status = processes.Length > 0 ? "Running" : "Stopped";
+            if (_isRestarting) return; // Skip monitoring while restarting
 
-            if (processes.Length == 0)
+            // Update status display to show monitoring is active
+            Invoke(new Action(() => UpdateStatusDisplay("Running...", Color.Green)));
+
+            foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
             {
-                ExceptionHandler.LogMessage($"{programName} stopped unexpectedly. Attempting to restart.");
+                string programName = row.Cells["ProgramName"].Value?.ToString();
+                string exePath = _exePaths.FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == programName);
+
+                if (!string.IsNullOrEmpty(exePath))
+                {
+                    // Check if the program is already running
+                    Process[] processes = Process.GetProcessesByName(programName);
+                    string status = processes.Length > 0 ? "Running" : "Stopped";
+
+                    if (processes.Length == 0)
+                    {
+                        ExceptionHandler.LogMessage($"{programName} stopped unexpectedly. Attempting to restart.");
+
+                        // Use a mutex to prevent multiple instances from starting
+                        using (var mutex = new Mutex(false, "Global\\Mutex_" + programName, out bool createdNew))
+                        {
+                            if (createdNew)
+                            {
+                                try
+                                {
+                                    Process.Start(exePath);
+                                    status = "Started";
+                                    ExceptionHandler.LogMessage($"{programName} restarted successfully.");
+                                }
+                                catch (Exception ex)
+                                {
+                                    ExceptionHandler.LogMessage($"Failed to start {programName}: {ex.Message}");
+                                }
+                            }
+                            else
+                            {
+                                ExceptionHandler.LogMessage($"{programName} is already running, not starting another instance.");
+                            }
+                        }
+                    }
+
+                    // Update DataGridView row with the current status
+                    Invoke(new Action(() => row.Cells["Status"].Value = status));
+                }
+            }
+        }
+
+        private static bool IsProcessRunning(string processName)
+        {
+            return Process.GetProcessesByName(processName).Length > 0;
+        }
+
+        private void RestartProcesses(object sender, ElapsedEventArgs e)
+        {
+            _isRestarting = true; // Indicate that restart is in progress
+
+            foreach (var exePath in _exePaths)
+            {
+                string programName = Path.GetFileNameWithoutExtension(exePath);
+
+                // Kill any running instances of the program
+                var processes = Process.GetProcessesByName(programName);
+                foreach (var process in processes)
+                {
+                    process.Kill();
+                    process.WaitForExit();
+                }
                 Process.Start(exePath);
-                status = "Restarted";
-                ExceptionHandler.LogMessage($"{programName} restarted.");
+                ExceptionHandler.LogMessage($"{programName} restarted by periodic restart timer.");
             }
 
-            Invoke(new Action(() => row.Cells["Status"].Value = status));
+            _isRestarting = false; // Restart is complete, re-enable monitoring
         }
-    }
- }
 
-private void RestartProcesses(object sender, ElapsedEventArgs e)
-{
-    _isRestarting = true; // Indicate that restart is in progress
-
-    foreach (var exePath in _exePaths)
-    {
-        string programName = Path.GetFileNameWithoutExtension(exePath);
-
-        // Kill any running instances of the program
-        var processes = Process.GetProcessesByName(programName);
-        foreach (var process in processes)
-        {
-            process.Kill();
-            process.WaitForExit();
-        }
-        Process.Start(exePath);
-        ExceptionHandler.LogMessage($"{programName} restarted by periodic restart timer.");
-    }
-
-    _isRestarting = false; // Restart is complete, re-enable monitoring
-}
 
 
         private void UpdateStatusDisplay(string message, Color color)
@@ -176,10 +209,41 @@ private void RestartProcesses(object sender, ElapsedEventArgs e)
 
         private void startMonitoring_Click(object sender, EventArgs e)
         {
+            // Load INI settings in case of changes
+            double monitorInterval = LoadIntervalSetting("MonitoringInterval", 5);
+            _monitorTimer.Interval = TimeSpan.FromSeconds(monitorInterval).TotalMilliseconds;
+
+            string enableRestart = INI2.ReadValue("Settings", "EnablePeriodicRestart", "False");
+            _enablePeriodicRestart = bool.TryParse(enableRestart, out bool enabled) && enabled;
+
+            if (_enablePeriodicRestart)
+            {
+                _restartInterval = LoadIntervalSetting("RestartInterval", 24);
+                _restartTimer.Interval = TimeSpan.FromHours(_restartInterval).TotalMilliseconds;
+
+                // Start the restart timer if it's enabled and not already running
+                if (!_restartTimer.Enabled)
+                {
+                    _restartTimer.Start();
+                }
+            }
+            else
+            {
+                // Stop the restart timer if periodic restarts are disabled
+                _restartTimer.Stop();
+            }
+
+            // Start monitoring 
             _monitorTimer.Start();
+            UpdateStatusDisplay("Running...", Color.Green);
             startMonitoring.Enabled = false;
             stopMonitoring.Enabled = true;
+            foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
+            {
+                row.Cells["Status"].Value = "Running";
+            }
         }
+
 
         private void stopMonitoring_Click(object sender, EventArgs e)
         {
@@ -187,6 +251,13 @@ private void RestartProcesses(object sender, ElapsedEventArgs e)
             UpdateStatusDisplay("Waiting...", Color.Red);
             startMonitoring.Enabled = true;
             stopMonitoring.Enabled = false;
+
+            // Stop the restart timer if periodic restarts are enabled
+            if (_enablePeriodicRestart && _restartTimer.Enabled)
+            {
+                _restartTimer.Stop();
+            }
+
             foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
             {
                 row.Cells["Status"].Value = "Stopped";
