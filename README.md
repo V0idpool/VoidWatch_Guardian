@@ -1,5 +1,5 @@
 # VoidWatch Guardian
-![VoidWatchGuardian](https://img.shields.io/badge/version-1.-brightgreen)
+![VoidWatchGuardian](https://img.shields.io/badge/version-1.3-brightgreen)
 ![Release](https://img.shields.io/badge/Release-11%2F13%2F2024-blue)
 
 ![VoidWatch Guardian Logo](https://raw.githubusercontent.com/V0idpool/VoidWatch_Guardian/refs/heads/main/voidwatch.webp)
