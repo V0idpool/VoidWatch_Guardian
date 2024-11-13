@@ -8,7 +8,7 @@ VoidWatch Guardian is a Windows-based watchdog application designed to automatic
 
 ## ⚙️ **Version**: 1.3 (Public Release)  
 ## 👨‍💻 **Author**: VoidBot Development Team ([@VoidPool](https://github.com/V0idpool))  
-## 📅 **Release Date**: 11/05/2024  
+## 📅 **Release Date**: 11/13/2024  
 
 ## Features
 
