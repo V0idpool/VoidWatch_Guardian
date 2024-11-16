@@ -56,6 +56,7 @@
             // 
             // menuStrip1
             // 
+            menuStrip1.BackColor = Color.FromArgb(30, 30, 30);
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, editToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
@@ -66,12 +67,14 @@
             // fileToolStripMenuItem
             // 
             fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { aboutToolStripMenuItem });
+            fileToolStripMenuItem.ForeColor = Color.White;
             fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             fileToolStripMenuItem.Size = new Size(44, 20);
             fileToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
+            aboutToolStripMenuItem.ForeColor = Color.White;
             aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             aboutToolStripMenuItem.Size = new Size(107, 22);
             aboutToolStripMenuItem.Text = "About";
@@ -80,12 +83,14 @@
             // editToolStripMenuItem
             // 
             editToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { settingsToolStripMenuItem });
+            editToolStripMenuItem.ForeColor = Color.White;
             editToolStripMenuItem.Name = "editToolStripMenuItem";
             editToolStripMenuItem.Size = new Size(39, 20);
             editToolStripMenuItem.Text = "Edit";
             // 
             // settingsToolStripMenuItem
             // 
+            settingsToolStripMenuItem.ForeColor = Color.White;
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             settingsToolStripMenuItem.Size = new Size(116, 22);
             settingsToolStripMenuItem.Text = "Settings";
@@ -281,5 +286,6 @@
         private Voidbot_Discord_Bot_GUI.NSButton startMonitoring;
         private Voidbot_Discord_Bot_GUI.NSGroupBox nsGroupBox3;
         private Voidbot_Discord_Bot_GUI.NSGroupBox nsGroupBox4;
+        private ToolStripMenuItem toolStripMenuItem1;
     }
 }

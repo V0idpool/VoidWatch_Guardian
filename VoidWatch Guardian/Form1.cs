@@ -19,7 +19,7 @@ namespace VoidWatchDog
             INI2 = new VoidWatchDog.inisettings();
             iniPath = Path.Combine(Application.StartupPath, "UserCFG.ini");
             INI2.Path = iniPath;
-
+            menuStrip1.Renderer = new CustomToolStripRenderer();
             InitializeDataGridView();
             InitializeTimers();
         }

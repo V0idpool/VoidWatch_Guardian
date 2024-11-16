@@ -3120,11 +3120,13 @@ namespace Voidbot_Discord_Bot_GUI
 
     public class NSContextMenu : ContextMenuStrip
     {
-
         public NSContextMenu()
         {
             Renderer = new ToolStripProfessionalRenderer(new NSColorTable());
             ForeColor = Color.White;
+
+            // Dock to the top of the parent form to mimic MenuStrip behavior
+            Dock = DockStyle.Top;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -3133,7 +3135,27 @@ namespace Voidbot_Discord_Bot_GUI
             base.OnPaint(e);
         }
 
+        // Override Show to prevent it from being context-based and instead stay visible
+        public new void Show(Control parent)
+        {
+            if (parent is Form form)
+            {
+                Parent = form;
+                form.Controls.Add(this); // Ensure it is added to the form's controls
+            }
+            Visible = true;
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            // Prevent hiding of the menu, ensuring it behaves like a persistent MenuStrip
+            if (!Visible)
+                Visible = true;
+
+            base.OnVisibleChanged(e);
+        }
     }
+
 
     public class NSColorTable : ProfessionalColorTable
     {

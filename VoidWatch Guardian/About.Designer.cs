@@ -138,10 +138,12 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            ClientSize = new Size(815, 429);
+            ClientSize = new Size(807, 429);
             Controls.Add(nsGroupBox1);
             ForeColor = Color.FromArgb(192, 0, 0);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
             Name = "About";
             Text = "About";
             nsGroupBox1.ResumeLayout(false);
