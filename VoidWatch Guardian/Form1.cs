@@ -8,11 +8,13 @@ namespace VoidWatchDog
         private System.Timers.Timer _monitorTimer;
         private System.Timers.Timer _restartTimer;
         private readonly List<string> _exePaths = new();
+        private Dictionary<string, DateTime> _lastCheckTimes = new();
         private inisettings INI2;
         private readonly string iniPath;
         private bool _enablePeriodicRestart;
         private double _restartInterval;
         private bool _isRestarting = false;
+        private bool _isMonitoring = false;
         public Form1()
         {
             InitializeComponent();
@@ -87,19 +89,48 @@ namespace VoidWatchDog
                 MessageBox.Show("UserCFG.ini not found. Creating default settings file...", "File Missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 EmbeddedResourceCreation.SaveToDisk("UserCFG.ini", iniPath);
             }
-
+            LoadProgramsToWatch();
             string autoStartMonitoring = INI2.ReadValue("Settings", "AutoStart", "False");
             if (bool.TryParse(autoStartMonitoring, out bool shouldAutoStart) && shouldAutoStart)
             {
+                // Load INI settings in case of changes
+                double monitorInterval = LoadIntervalSetting("MonitoringInterval", 5);
+                _monitorTimer.Interval = TimeSpan.FromSeconds(monitorInterval).TotalMilliseconds;
+
+                string enableRestart = INI2.ReadValue("Settings", "EnablePeriodicRestart", "False");
+                _enablePeriodicRestart = bool.TryParse(enableRestart, out bool enabled) && enabled;
+
+                if (_enablePeriodicRestart)
+                {
+                    _restartInterval = LoadIntervalSetting("RestartInterval", 24);
+                    _restartTimer.Interval = TimeSpan.FromHours(_restartInterval).TotalMilliseconds;
+
+                    // Start the restart timer if it's enabled and not already running
+                    if (!_restartTimer.Enabled)
+                    {
+                        _restartTimer.Start();
+                    }
+                }
+                else
+                {
+                    // Stop the restart timer if periodic restarts are disabled
+                    _restartTimer.Stop();
+                }
+
+                // Start monitoring 
                 _monitorTimer.Start();
                 UpdateStatusDisplay("Running...", Color.Green);
                 startMonitoring.Enabled = false;
                 stopMonitoring.Enabled = true;
+                foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
+                {
+                    row.Cells["Status"].Value = "Running";
+                }
             }
 
             if (_enablePeriodicRestart) _restartTimer.Start();
 
-            LoadProgramsToWatch();
+
         }
 
         private void LoadProgramsToWatch()
@@ -123,52 +154,70 @@ namespace VoidWatchDog
 
         public void MonitorProcesses(object sender, ElapsedEventArgs e)
         {
-            if (_isRestarting) return; // Skip monitoring while restarting
+            if (_isMonitoring || _isRestarting) return;
 
-            // Update status display to show monitoring is active
-            Invoke(new Action(() => UpdateStatusDisplay("Running...", Color.Green)));
-
-            foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
+            _isMonitoring = true;
+            try
             {
-                string programName = row.Cells["ProgramName"].Value?.ToString();
-                string exePath = _exePaths.FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == programName);
+                Invoke(new Action(() => UpdateStatusDisplay("Running...", Color.Green)));
 
-                if (!string.IsNullOrEmpty(exePath))
+                foreach (DataGridViewRow row in lstWatchedPrograms.Rows)
                 {
-                    // Check if the program is already running
-                    Process[] processes = Process.GetProcessesByName(programName);
-                    string status = processes.Length > 0 ? "Running" : "Stopped";
+                    string programName = row.Cells["ProgramName"].Value?.ToString();
+                    string exePath = _exePaths.FirstOrDefault(p => Path.GetFileNameWithoutExtension(p) == programName);
 
-                    if (processes.Length == 0)
+                    if (!string.IsNullOrEmpty(exePath))
                     {
-                        ExceptionHandler.LogMessage($"{programName} stopped unexpectedly. Attempting to restart.");
-
-                        // Use a mutex to prevent multiple instances from starting
-                        using (var mutex = new Mutex(false, "Global\\Mutex_" + programName, out bool createdNew))
+                        if (_lastCheckTimes.TryGetValue(programName, out DateTime lastCheck) &&
+                            (DateTime.Now - lastCheck).TotalSeconds < 10)
                         {
-                            if (createdNew)
+                            continue; // Skip if checked recently
+                        }
+                        _lastCheckTimes[programName] = DateTime.Now;
+
+                        Process[] processes = Process.GetProcessesByName(programName);
+                        string status = processes.Length > 0 ? "Running" : "Stopped";
+
+                        if (processes.Length == 0)
+                        {
+                            using (var mutex = new Mutex(false, "Global\\Mutex_" + programName))
                             {
-                                try
+                                if (mutex.WaitOne(0, false))
                                 {
-                                    Process.Start(exePath);
-                                    status = "Started";
-                                    ExceptionHandler.LogMessage($"{programName} restarted successfully.");
-                                }
-                                catch (Exception ex)
-                                {
-                                    ExceptionHandler.LogMessage($"Failed to start {programName}: {ex.Message}");
+                                    try
+                                    {
+                                        Process.Start(exePath);
+                                        Thread.Sleep(1000); // Wait for 1 second
+                                        if (Process.GetProcessesByName(programName).Length > 0)
+                                        {
+                                            status = "Started";
+                                            ExceptionHandler.LogMessage($"{programName} restarted successfully.");
+                                        }
+                                        else
+                                        {
+                                            status = "Failed to Start";
+                                            ExceptionHandler.LogMessage($"Failed to confirm start of {programName}.");
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        ExceptionHandler.LogMessage($"Failed to start {programName}: {ex.Message}");
+                                    }
+                                    finally
+                                    {
+                                        mutex.ReleaseMutex();
+                                    }
                                 }
                             }
-                            else
-                            {
-                                ExceptionHandler.LogMessage($"{programName} is already running, not starting another instance.");
-                            }
+
+                            Invoke(new Action(() => row.Cells["Status"].Value = status));
                         }
                     }
-
-                    // Update DataGridView row with the current status
-                    Invoke(new Action(() => row.Cells["Status"].Value = status));
                 }
+            }
+            finally
+            {
+                _isMonitoring = false;
             }
         }
 
